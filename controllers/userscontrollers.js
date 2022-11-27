@@ -496,7 +496,7 @@ paypal.configure({
 });
 
 
-router.post('/pay', (req, res) => {
+  router.post('/pay', (req, res) => {
   totalprice = req.body.totalprice;
   localStorage = new LocalStorage("./scratch");
   localStorage.setItem("totalprice", totalprice);
@@ -506,8 +506,8 @@ router.post('/pay', (req, res) => {
         "payment_method": "paypal"
     },
     "redirect_urls": {
-        "return_url": "http://localhost:3000/user/paymentsuccess",
-        "cancel_url": "http://localhost:3000/user/paymentcancel"
+        "return_url": "https://dukannethiopia.cyclic.app/user/paymentsuccess",
+        "cancel_url": "https://dukannethiopia.cyclic.app/user/paymentcancel"
     },
     "transactions": [{
         "item_list": {
@@ -570,7 +570,7 @@ router.get('/paymentsuccess', async(req, res) => {
       await transaction
         .save()
         .then(() => {
-          res.redirect("http://localhost:8080/successPage");
+          res.redirect("https://dukaanethiopia.netlify.app/successPage");
         })
         .catch((error) => {
          console.log(error)
@@ -580,7 +580,7 @@ router.get('/paymentsuccess', async(req, res) => {
 });
 
 router.get('/paymentcancel', (req, res) => 
-        res.redirect("http://localhost:8080/cancelPage")
+        res.redirect("https://dukaanethiopia.netlify.app/cancelPage")
 );
 
 
