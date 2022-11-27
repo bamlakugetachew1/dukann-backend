@@ -61,6 +61,12 @@ function verifytoken(req, res, next) {
   }
 }
 
+router.get("/",(req,res)=>{
+         res.json({
+           message:"hello"
+         })
+});
+
 router.post(
   "/uploadimages",productaddlimiter,
   verifytoken,
