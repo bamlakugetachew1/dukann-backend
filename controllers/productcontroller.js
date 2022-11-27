@@ -53,9 +53,26 @@ const upload = multer({
 
 router.post("/uploadimages",productaddlimiter,verifytoken, upload.array("productimages",4), async (req, res) => {
   reqFiles = [];
-         for(let i=0; i<req.files.length; i++){
+//          for(let i=0; i<req.files.length; i++){
+//              var upload = await cloudinary.v2.uploader.upload(req.files[i].path);
+//              reqFiles.push(upload.secure_url);     
+//                }
+	
+	    for(let i=0; i<req.files.length; i++){
              var upload = await cloudinary.v2.uploader.upload(req.files[i].path);
-             reqFiles.push(upload.secure_url);     
+             var url = upload.secure_url;
+             var string = '';
+             var count = 0;
+             for(let i=0; i<url.length; i++){
+                 if(url[i]=="/"){
+                   count++
+                 }
+                 if(count == 7 && url[i]!="/"){
+                       string+=url[i]
+                   }
+                 }
+              var finalurl = "https://res.cloudinary.com/dwq2ftoo3/image/upload/w_300,h_340,c_scale/" + string;
+              reqFiles.push(finalurl);     
                }
 
   // const upload = await cloudinary.v2.uploader.upload(req.files.path);
