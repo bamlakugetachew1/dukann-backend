@@ -1,0 +1,8 @@
+port=your port number
+Mongourl = your mongodb url connection string
+SecretToken = your token
+SecretRefres = your secret token
+Googleid = your google id for google auth
+Googlesecret = your google secret for google auth
+paypalClientid = your paypal client id for merchant
+paypalClientsecret = your paypal secret for merchant
