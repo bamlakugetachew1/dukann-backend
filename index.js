@@ -15,6 +15,7 @@ const cluster = require("cluster");
 const os = require("os");
 const numcpu = os.cpus().length;
 const app = express();
+app.use(cors());
 app.use(cookieParser());
 app.use(
   session({
