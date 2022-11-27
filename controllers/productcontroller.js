@@ -9,6 +9,15 @@ const Jimp = require("jimp");
 const isImage = require("is-image");
 const jwt = require("jsonwebtoken");
 const ratelimit = require("express-rate-limit");
+const cloudinary = require("cloudinary");
+const cloudinaryStorage = require("multer-storage-cloudinary");
+const Formidable = require('formidable');
+
+cloudinary.config({
+  cloud_name: process.env.cloud_name,
+  api_key:  process.env.api_key,
+  api_secret: process.env.api_secret
+});
 
 var reqFiles = [];
 var ext = "";
@@ -30,7 +39,7 @@ const productaddlimiter = ratelimit({
 
 
 const storage = multer.diskStorage({
-  destination: "./uploads",
+  // destination: "./uploads",
   filename: (req, file, cb) => {
     return cb(
       null,
@@ -41,6 +50,28 @@ const storage = multer.diskStorage({
 const upload = multer({
   storage: storage,
 });
+
+router.post("/uploadimages",productaddlimiter,verifytoken, upload.array("productimages",4), async (req, res) => {
+  reqFiles = [];
+         for(let i=0; i<req.files.length; i++){
+             var upload = await cloudinary.v2.uploader.upload(req.files[i].path);
+             reqFiles.push(upload.secure_url);     
+               }
+
+  // const upload = await cloudinary.v2.uploader.upload(req.files.path);
+ console.log(reqFiles);
+  return res.json({
+    success: true,
+    check: "imageadded",
+    
+  });
+});
+
+
+
+
+
+
 
 function verifytoken(req, res, next) {
   const token = req.headers["authorization"];
@@ -61,32 +92,32 @@ function verifytoken(req, res, next) {
   }
 }
 
-router.post(
-  "/uploadimages",productaddlimiter,
-  verifytoken,
-  upload.array("productimages", 4),
-  async (req, res) => {
-    var paths = "";
-    reqFiles = [];
-    for (var i = 0; i < req.files.length; i++) {
-      reqFiles.push(req.files[i].filename);
-      paths = `./uploads/${req.files[i].filename}`;
-      ext = path.extname(req.files[i].filename);
-      if (isImage(paths) && ext != ".webp") {
-        var image = await Jimp.read(paths);
-        image
-          .resize(300, 320, function (err) {
-            if (err) console.log(err);
-          })
-          .quality(60)
-          .write(paths);
-      }
-    }
-    res.json({
-      check: "imageadded",
-    });
-  }
-);
+// router.post(
+//   "/uploadimages",productaddlimiter,
+//   verifytoken,
+//   upload.array("productimages", 4),
+//   async (req, res) => {
+//     var paths = "";
+//     reqFiles = [];
+//     for (var i = 0; i < req.files.length; i++) {
+//       reqFiles.push(req.files[i].filename);
+//       paths = `./uploads/${req.files[i].filename}`;
+//       ext = path.extname(req.files[i].filename);
+//       if (isImage(paths) && ext != ".webp") {
+//         var image = await Jimp.read(paths);
+//         image
+//           .resize(300, 320, function (err) {
+//             if (err) console.log(err);
+//           })
+//           .quality(60)
+//           .write(paths);
+//       }
+//     }
+//     res.json({
+//       check: "imageadded",
+//     });
+//   }
+// );
 
 router.post("/addproducts",productaddlimiter, verifytoken, async (req, res) => {
   const product = new productmodels({
@@ -110,6 +141,13 @@ router.post("/addproducts",productaddlimiter, verifytoken, async (req, res) => {
       console.log(e);
     });
 });
+
+router.get("/",(req,res)=>{
+         res.json({
+           message:"hello"
+         })
+});
+
 
 router.get("/getallproducts/:page",limiter, async (req, res) => {
   let limit = 6;
