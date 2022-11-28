@@ -38,7 +38,7 @@ passport.use(
     {
       clientID: process.env.Googleid,
       clientSecret: process.env.Googlesecret,
-      callbackURL: "http://localhost:3000/user/callback",
+      callbackURL: "https://dukannethiopia.cyclic.app/user/callback",
       passReqToCallback: true,
     },
     function (request, accessToken, refreshToken, profile, done) {
@@ -101,7 +101,7 @@ router.get("/auth/callback/success", async (req, res) => {
         const param1 = localStorage.getItem("sellerid");
         const param2 = localStorage.getItem("tokens");
         res.redirect(
-          "http://localhost:8080/passwordList/?sellerid=" +
+          "https://dukaanethiopia.netlify.app/passwordList/?sellerid=" +
             param1 +
             "&token=" +
             param2
@@ -116,7 +116,7 @@ router.get("/auth/callback/success", async (req, res) => {
     const param1 = localStorage.getItem("sellerid");
     const param2 = localStorage.getItem("tokens");
     res.redirect(
-      "http://localhost:8080/passwordList/?sellerid=" +
+      "https://dukaanethiopia.netlify.app/passwordList/?sellerid=" +
         param1 +
         "&token=" +
         param2
@@ -124,7 +124,7 @@ router.get("/auth/callback/success", async (req, res) => {
   }
 });
 
-async function tokengenerate() {
+  async function tokengenerate() {
   user = await googlemodel.findOne({ email: googlemail });
   // tokens= jwt.sign({ user: user }, process.env.SecretToken, { expiresIn: "1d" });
 
