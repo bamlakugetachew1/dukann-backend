@@ -539,8 +539,10 @@ paypal.payment.create(create_payment_json, function (error, payment) {
 });
 
 router.get('/paymentsuccess', async(req, res) => {
-   localStorage = new LocalStorage("./scratch");
-   const price = localStorage.getItem("totalprice");
+//    localStorage = new LocalStorage("./scratch");
+//    const price = localStorage.getItem("totalprice");
+   
+   var price = totalprice;
    const payerId = req.query.PayerID;
    const paymentId = req.query.paymentId;
    const execute_payment_json = {
