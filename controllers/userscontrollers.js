@@ -577,6 +577,26 @@ router.get('/paymentsuccess/:price', async(req, res) => {
       await transaction
         .save()
         .then(() => {
+               
+  var iffound =  usermodels.findById(req.session.sellerid);
+  var googlesucces = "false";
+  if (iffound == null) {
+    iffound =  googlemodel.findById(req.session.sellerid);
+    googlesucces = "true";
+     }
+
+     if (googlesucces == "true") {
+     googlemodel.findByIdAndUpdate(req.session.sellerid, {
+        $set: { mycarts: [] },
+      });
+     }
+     else{
+      usermodels.findByIdAndUpdate(req.session.sellerid, {
+        $set: { mycarts: [] },
+      });
+     }
+        
+        
           res.redirect("https://dukaanethiopia.netlify.app/successPage");
         })
         .catch((error) => {
