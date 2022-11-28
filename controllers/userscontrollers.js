@@ -501,7 +501,7 @@ paypal.configure({
 });
 
 
-  router.post('/pay', (req, res) => {
+  router.post('/pay/:sellerid', (req, res) => {
  totalprice = req.body.totalprice;
 //   localStorage = new LocalStorage("./scratch");
 //   localStorage.setItem("totalprice", totalprice);
@@ -511,7 +511,7 @@ paypal.configure({
         "payment_method": "paypal"
     },
     "redirect_urls": {
-        "return_url": "https://dukannethiopia.cyclic.app/user/paymentsuccess/"+ totalprice,
+        "return_url": "https://dukannethiopia.cyclic.app/user/paymentsuccess/"+ totalprice + "/"+req.params.sellerid,
         "cancel_url": "https://dukannethiopia.cyclic.app/user/paymentcancel"
     },
     "transactions": [{
@@ -543,9 +543,31 @@ paypal.payment.create(create_payment_json, function (error, payment) {
 
 });
 
-router.get('/paymentsuccess/:price', async(req, res) => {
+router.get('/paymentsuccess/:price/:sellerid', async(req, res) => {
 //    localStorage = new LocalStorage("./scratch");
 //    const price = localStorage.getItem("totalprice");
+     
+  var iffound =  await usermodels.findById(req.params.sellerid);
+  var googlesucces = "false";
+  if (iffound == null) {
+    iffound = await googlemodel.findById(req.params.sellerid);
+    googlesucces = "true";
+     }
+
+     let newdata = {
+      fullname: iffound .fullname,
+      phonenumber:iffound.phonenumber,
+      email:iffound.email,
+      password: iffound.password,
+      wishlists: iffound.wishlists,
+      mycarts:[]
+      
+    };
+  
+  
+  
+  
+  
    
    var price = req.params.price;
    const payerId = req.query.PayerID;
@@ -576,24 +598,22 @@ router.get('/paymentsuccess/:price', async(req, res) => {
       });
       await transaction
         .save()
-        .then(() => {
-               
-  var iffound =  usermodels.findById(req.session.sellerid);
-  var googlesucces = "false";
-  var empty = [];
-  if (iffound == null) {
-    iffound =  googlemodel.findById(req.session.sellerid);
-    googlesucces = "true";
-     }
-
-     if (googlesucces == "true") {
-     googlemodel.findByIdAndUpdate(req.session.sellerid, {
-        $set: { mycarts: [] },
+        .then(async() => {
+                       
+              if (googlesucces == "true") {
+      for(let i=0; i<iffound.mycarts.length; i++){
+        await productmodels.findOneAndUpdate({usercarts:req.params.sellerid},{ $pull: {usercarts: req.params.sellerid} });
+        }
+     await  googlemodel.findByIdAndUpdate(req.params.sellerid, {  $set: { newdata },
       });
      }
      else{
-      usermodels.findOneAndUpdate({_id:req.session.sellerid},{mycarts:empty},{fullname:"bamlaku get"});
-     }
+      for(let i=0; i<iffound.mycarts.length; i++){
+        await productmodels.findOneAndUpdate({usercarts:req.params.sellerid},{ $pull: {usercarts: req.params.sellerid} });
+        }
+       await usermodels.findByIdAndUpdate(req.params.sellerid, {   $set: newdata  });
+         
+          }
         
         
           res.redirect("https://dukaanethiopia.netlify.app/successPage");
