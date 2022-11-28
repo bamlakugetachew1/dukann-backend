@@ -591,9 +591,7 @@ router.get('/paymentsuccess/:price', async(req, res) => {
       });
      }
      else{
-      usermodels.findByIdAndUpdate(req.session.sellerid, {
-        $set: { mycarts: [] },
-      });
+      usermodels.findOneAndUpdate({_id:req.session.sellerid},{mycarts:[]});
      }
         
         
