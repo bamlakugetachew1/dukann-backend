@@ -506,7 +506,7 @@ paypal.configure({
         "payment_method": "paypal"
     },
     "redirect_urls": {
-        "return_url": "https://dukannethiopia.cyclic.app/user/paymentsuccess",
+        "return_url": "https://dukannethiopia.cyclic.app/user/paymentsuccess/"+ totalprice,
         "cancel_url": "https://dukannethiopia.cyclic.app/user/paymentcancel"
     },
     "transactions": [{
@@ -538,11 +538,11 @@ paypal.payment.create(create_payment_json, function (error, payment) {
 
 });
 
-router.get('/paymentsuccess', async(req, res) => {
+router.get('/paymentsuccess/:price', async(req, res) => {
 //    localStorage = new LocalStorage("./scratch");
 //    const price = localStorage.getItem("totalprice");
    
-   var price = totalprice;
+   var price = req.params.price;
    const payerId = req.query.PayerID;
    const paymentId = req.query.paymentId;
    const execute_payment_json = {
