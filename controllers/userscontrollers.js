@@ -14,6 +14,8 @@ const ratelimit = require("express-rate-limit");
 const productmodels = mongoose.model("productschema");
 const transactionmodels = mongoose.model("transactionschema");
 const paypal = require('paypal-rest-sdk');
+var session = require("express-session");
+
 var totalprice = "";
 
 var googlemail = " ";
@@ -198,6 +200,8 @@ router.post("/login", limiter, async (req, res) => {
               message: "error in creating tokens",
             });
           } else {
+            req.session.sellerid = user._id;
+
             res.json({
               token: token,
               success: true,
