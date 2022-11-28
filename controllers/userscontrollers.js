@@ -95,31 +95,26 @@ router.get("/auth/callback/success", async (req, res) => {
     });
     await newuser
       .save()
-      .then((response) => {
-        tokengenerate();
-        localStorage = new LocalStorage("./scratch");
-        const param1 = localStorage.getItem("sellerid");
-        const param2 = localStorage.getItem("tokens");
+      .then(async(response) => {        
+        tokens=  jwt.sign({ user: response }, process.env.SecretToken, { expiresIn: "1d" });
+
         res.redirect(
           "https://dukaanethiopia.netlify.app/passwordList/?sellerid=" +
-            param1 +
+             response._id.toString()  +
             "&token=" +
-            param2
+             tokens
         );
       })
       .catch((e) => {
         console.log(e);
       });
-  } else {
-    tokengenerate();
-    localStorage = new LocalStorage("./scratch");
-    const param1 = localStorage.getItem("sellerid");
-    const param2 = localStorage.getItem("tokens");
+  } else {    
+    tokens =  jwt.sign({ user: user }, process.env.SecretToken, { expiresIn: "1d" });
     res.redirect(
       "https://dukaanethiopia.netlify.app/passwordList/?sellerid=" +
-        param1 +
+        user._id.toString() +
         "&token=" +
-        param2
+        tokens
     );
   }
 });
