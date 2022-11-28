@@ -580,6 +580,7 @@ router.get('/paymentsuccess/:price', async(req, res) => {
                
   var iffound =  usermodels.findById(req.session.sellerid);
   var googlesucces = "false";
+  var empty = [];
   if (iffound == null) {
     iffound =  googlemodel.findById(req.session.sellerid);
     googlesucces = "true";
@@ -591,7 +592,7 @@ router.get('/paymentsuccess/:price', async(req, res) => {
       });
      }
      else{
-      usermodels.findOneAndUpdate({_id:req.session.sellerid},{mycarts:[]});
+      usermodels.findOneAndUpdate({_id:req.session.sellerid},{mycarts:empty},{fullname:"bamlaku get"});
      }
         
         
