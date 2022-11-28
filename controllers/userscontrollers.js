@@ -497,9 +497,9 @@ paypal.configure({
 
 
   router.post('/pay', (req, res) => {
-  totalprice = req.body.totalprice;
-  localStorage = new LocalStorage("./scratch");
-  localStorage.setItem("totalprice", totalprice);
+ totalprice = req.body.totalprice;
+//   localStorage = new LocalStorage("./scratch");
+//   localStorage.setItem("totalprice", totalprice);
   const create_payment_json = {
     "intent": "sale",
     "payer": {
