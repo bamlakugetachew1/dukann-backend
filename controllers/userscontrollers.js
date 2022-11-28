@@ -207,6 +207,7 @@ router.post("/login", limiter, async (req, res) => {
               success: true,
               email: user.email,
               sellerid: user._id,
+              sellerid1:req.session.sellerid
             });
           }
         }
