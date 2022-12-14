@@ -109,32 +109,7 @@ function verifytoken(req, res, next) {
 }
 
 
-// router.post(
-//   "/uploadimages",productaddlimiter,
-//   verifytoken,
-//   upload.array("productimages", 4),
-//   async (req, res) => {
-//     var paths = "";
-//     reqFiles = [];
-//     for (var i = 0; i < req.files.length; i++) {
-//       reqFiles.push(req.files[i].filename);
-//       paths = `./uploads/${req.files[i].filename}`;
-//       ext = path.extname(req.files[i].filename);
-//       if (isImage(paths) && ext != ".webp") {
-//         var image = await Jimp.read(paths);
-//         image
-//           .resize(300, 320, function (err) {
-//             if (err) console.log(err);
-//           })
-//           .quality(60)
-//           .write(paths);
-//       }
-//     }
-//     res.json({
-//       check: "imageadded",
-//     });
-//   }
-// );
+
 
  router.get("/",(req,res)=>{
          res.json({
@@ -142,33 +117,7 @@ function verifytoken(req, res, next) {
          })
        });
 
-// router.post(
-//   "/uploadimages",productaddlimiter,
-//   verifytoken,
-//   upload.array("productimages", 4),
-//   async (req, res) => {
-//     var paths = "";
-//     reqFiles = [];
-//     for (var i = 0; i < req.files.length; i++) {
-//       reqFiles.push(req.files[i].filename);
-//       paths = `./uploads/${req.files[i].filename}`;
-//       ext = path.extname(req.files[i].filename);
-//       if (isImage(paths) && ext != ".webp") {
-//         var image = await Jimp.read(paths);
-//         image
-//           .resize(300, 320, function (err) {
-//             if (err) console.log(err);
-//           })
-//           .quality(60)
-//           .write(paths);
-//       }
-//     }
-//     res.json({
-//       check: "imageadded",
-//     });
-//   }
-// );
-// >>>>>>> f123605c6dfc8cb31c34f6efef35b6cbec65ea05
+
 
 router.post("/addproducts",productaddlimiter, verifytoken, async (req, res) => {
   const product = new productmodels({
@@ -250,22 +199,7 @@ router.get("/getmyproducts/:page", verifytoken, async (req, res) => {
 });
 
 
-router.get("/getmyproductswithoutagaiverify/:page", async (req, res) => {
-  let limit = 3;
-  let page = req.params.page || 1;
-  let skip = (page-1)*limit;
-  let productnumber = await productmodels.find({sellerid:req.user.user._id}).count();
-  await productmodels.find({ sellerid: req.user.user._id }).limit(limit).skip(skip)
-    .then((response) => {
-      res.json({
-        data: response,
-        productnumber:productnumber
-      });
-    })
-    .catch((error) => {
-      res.send(error);
-    });
-});
+
 
 
 
