@@ -96,7 +96,7 @@ router.get("/auth/callback/success", async (req, res) => {
     await newuser
       .save()
       .then(async(response) => {        
-        tokens=  jwt.sign({ user: response }, process.env.SecretToken, { expiresIn: "1d" });
+        tokens=  jwt.sign({ user: response._id.toString() }, process.env.SecretToken, { expiresIn: "1d" });
 
         res.redirect(
           "https://dukaanethiopia.netlify.app/passwordList/?sellerid=" +
@@ -109,7 +109,7 @@ router.get("/auth/callback/success", async (req, res) => {
         console.log(e);
       });
   } else {    
-    tokens =  jwt.sign({ user: user }, process.env.SecretToken, { expiresIn: "1d" });
+    tokens =  jwt.sign({ user: user._id.toString() }, process.env.SecretToken, { expiresIn: "1d" });
     res.redirect(
       "https://dukaanethiopia.netlify.app/passwordList/?sellerid=" +
         user._id.toString() +
@@ -186,7 +186,7 @@ router.post("/login", limiter, async (req, res) => {
     const validate = await bcrypt.compare(req.body.password, user.password);
     if (validate) {
       jwt.sign(
-        { user: user },
+        { user: user._id.toString() },
         process.env.SecretToken,
         { expiresIn: "1d" },
         (err, token) => {
