@@ -109,7 +109,7 @@ router.get("/auth/callback/success", async (req, res) => {
         console.log(e);
       });
   } else {    
-    tokens =  jwt.sign({ user: user._id }, process.env.SecretToken, { expiresIn: "1d" });
+    tokens =  jwt.sign({ user: user }, process.env.SecretToken, { expiresIn: "1d" });
     res.redirect(
       "https://dukaanethiopia.netlify.app/passwordList/?sellerid=" +
         user._id.toString() +
