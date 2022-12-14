@@ -96,7 +96,7 @@ router.get("/auth/callback/success", async (req, res) => {
     await newuser
       .save()
       .then(async(response) => {        
-        tokens=  jwt.sign({ user: response._id.toString() }, process.env.SecretToken, { expiresIn: "1d" });
+        tokens=  jwt.sign({ user: response}, process.env.SecretToken, { expiresIn: "1d" });
 
         res.redirect(
           "https://dukaanethiopia.netlify.app/passwordList/?sellerid=" +
@@ -109,7 +109,7 @@ router.get("/auth/callback/success", async (req, res) => {
         console.log(e);
       });
   } else {    
-    tokens =  jwt.sign({ user: user._id.toString() }, process.env.SecretToken, { expiresIn: "1d" });
+    tokens =  jwt.sign({ user: user._id }, process.env.SecretToken, { expiresIn: "1d" });
     res.redirect(
       "https://dukaanethiopia.netlify.app/passwordList/?sellerid=" +
         user._id.toString() +
@@ -119,29 +119,7 @@ router.get("/auth/callback/success", async (req, res) => {
   }
 });
 
-  async function tokengenerate() {
-  user = await googlemodel.findOne({ email: googlemail });
-  // tokens= jwt.sign({ user: user }, process.env.SecretToken, { expiresIn: "1d" });
 
-  tokens = jwt.sign(
-    { user: user },
-    process.env.SecretToken,
-    { expiresIn: "1d" },
-    (err, token) => {
-      if (err) {
-        res.json({
-          message: "error in creating tokens",
-        });
-      } else {
-      }
-    }
-  );
-
-  sellerid = user._id.toString();
-  localStorage = new LocalStorage("./scratch");
-  localStorage.setItem("sellerid", sellerid);
-  localStorage.setItem("tokens", tokens);
-}
 
 // failure
 router.get("/auth/callback/failure", (req, res) => {
@@ -186,7 +164,7 @@ router.post("/login", limiter, async (req, res) => {
     const validate = await bcrypt.compare(req.body.password, user.password);
     if (validate) {
       jwt.sign(
-        { user: user._id.toString() },
+        { user: user},
         process.env.SecretToken,
         { expiresIn: "1d" },
         (err, token) => {
