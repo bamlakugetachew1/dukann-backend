@@ -250,6 +250,26 @@ router.get("/getmyproducts/:page", verifytoken, async (req, res) => {
 });
 
 
+router.get("/getmyproductswithoutagaiverify/:page", async (req, res) => {
+  let limit = 3;
+  let page = req.params.page || 1;
+  let skip = (page-1)*limit;
+  let productnumber = await productmodels.find({sellerid:req.user.user._id}).count();
+  await productmodels.find({ sellerid: req.user.user._id }).limit(limit).skip(skip)
+    .then((response) => {
+      res.json({
+        data: response,
+        productnumber:productnumber
+      });
+    })
+    .catch((error) => {
+      res.send(error);
+    });
+});
+
+
+
+
 router.get("/allproducts/sortbynewst/:page", async (req, res) => {
   let limit = 6;
   let page = req.params.page || 1;
